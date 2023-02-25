@@ -28,6 +28,29 @@ const handleEncrypt = () => {
 };
 
 const handleHide = () => {
+    if (!$('#encrypt-key').val()) {
+        Swal.fire({
+            icon: 'error',
+            // title: 'Oops...',
+            text: 'The Key field is required!',
+        });
+        return;
+    }
+    if (!$('#mes-encrypt').val()) {
+        Swal.fire({
+            icon: 'error',
+            text: 'The Message field is required!',
+        });
+        return;
+    }
+    if (!$('#img-encrypt').val()) {
+        Swal.fire({
+            icon: 'error',
+            text: 'The Image field is required!',
+        });
+        return;
+    }
+
     let original = document.querySelector('.preview-original'),
         cover = document.querySelector('.preview-hidden'),
         download = document.getElementById('download');
@@ -41,10 +64,31 @@ const handleHide = () => {
         // cover.src = steg.encode(ciphertext.value, original);
         download.download = 'encoded_image.png';
         download.href = cover.src.replace('image/png', 'image/octet-stream');
+        Swal.fire({
+            icon: 'success',
+            // title: 'Oops...',
+            text: 'Successfully hide',
+        });
     }
 };
 
 const handleShow = () => {
+    if (!$('#decrypt-key').val()) {
+        Swal.fire({
+            icon: 'error',
+            // title: 'Oops...',
+            text: 'The Key field is required!',
+        });
+        return;
+    }
+    if ($('.preview-encrypted').attr('src') === './images/default.png') {
+        Swal.fire({
+            icon: 'error',
+            // title: 'Oops...',
+            text: 'The Encrypted Image is required!',
+        });
+        return;
+    }
     const key = $('#decrypt-key').val();
     var img = document.querySelector('.preview-encrypted'),
         message = document.querySelector('#mes-decrypted');
@@ -54,9 +98,23 @@ const handleShow = () => {
         let originalText = bytes.toString(CryptoJS.enc.Utf8);
         message.innerHTML = originalText;
     }
+    if (!message.innerHTML)
+        Swal.fire({
+            icon: 'error',
+            // title: 'Oops...',
+            text: 'Cannot show!',
+        });
 };
 
 const handleSend = () => {
+    if ($('.preview-hidden').attr('src') === './images/default.png') {
+        Swal.fire({
+            icon: 'error',
+            // title: 'Oops...',
+            text: 'You need to hide infomation first!',
+        });
+        return;
+    }
     $('#decrypt-key').val($('#encrypt-key').val());
     $('.preview-encrypted').attr('src', $('.preview-hidden').attr('src'));
 };
@@ -65,7 +123,7 @@ const handleGenerate = () => {
     var salt = CryptoJS.lib.WordArray.random(128 / 8);
     $('#encrypt-key').val(
         CryptoJS.PBKDF2('pass123', salt, {
-            keySize: 512 / 32,
+            keySize: 512 / 64,
             iterations: 1000,
         })
     );
