@@ -97,7 +97,7 @@ const handleShow = async () => {
         return;
     }
     const key = $('#decrypt-key').val();
-    var img = document.querySelector('.preview-encrypted'),
+    let img = document.querySelector('.preview-encrypted'),
         message = document.querySelector('#mes-decrypted');
     if (img) {
         let ciphertext = steg.decode(img);
@@ -128,13 +128,42 @@ const handleSend = () => {
 };
 
 const handleGenerate = () => {
-    var salt = CryptoJS.lib.WordArray.random(128 / 8);
+    let salt = CryptoJS.lib.WordArray.random(128 / 8);
     $('#encrypt-key').val(
         CryptoJS.PBKDF2('pass123', salt, {
             keySize: 512 / 64,
             iterations: 1000,
         })
     );
+};
+
+const handleReadFile = async () => {
+    const [file] = document.querySelector('#mes-file').files;
+    async function loadFile(url, callback) {
+        await PizZipUtils.getBinaryContent(url, callback);
+    }
+    async function gettext() {
+        await loadFile(URL.createObjectURL(file), function (error, content) {
+            if (error) {
+                throw error;
+            }
+            let zip = new PizZip(content);
+            let doc = new window.docxtemplater(zip);
+            let text = doc.getFullText();
+            $('#mes-encrypt').val(text);
+        });
+    }
+
+    if (file.type === 'text/plain') {
+        let fr = new FileReader();
+        fr.onload = function () {
+            $('#mes-encrypt').val(fr.result);
+        };
+
+        fr.readAsText(file);
+    } else {
+        await gettext();
+    }
 };
 
 $(document).ready(function () {
@@ -146,4 +175,5 @@ $(document).ready(function () {
     $('#show-btn').click(handleShow);
     $('#send-btn').click(handleSend);
     $('#generate-btn').click(handleGenerate);
+    $('#mes-file').change(handleReadFile);
 });
