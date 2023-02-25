@@ -19,15 +19,15 @@ const clearAll = () => {
     $('#download').attr('href', '#');
 };
 
-const handleEncrypt = () => {
-    let ciphertext = CryptoJS.AES.encrypt(
+const handleEncrypt = async () => {
+    let ciphertext = await CryptoJS.AES.encrypt(
         $('#mes-encrypt').val(),
         $('#encrypt-key').val()
     ).toString();
     $('#mes-encrypted').val(ciphertext);
 };
 
-const handleHide = () => {
+const handleHide = async () => {
     if (!$('#encrypt-key').val()) {
         Swal.fire({
             icon: 'error',
@@ -55,12 +55,12 @@ const handleHide = () => {
         cover = document.querySelector('.preview-hidden'),
         download = document.getElementById('download');
     // ciphertext = document.getElementById('mes-encrypted'),
-    let ciphertext = CryptoJS.AES.encrypt(
+    let ciphertext = await CryptoJS.AES.encrypt(
         $('#mes-encrypt').val(),
         $('#encrypt-key').val()
     ).toString();
     if (original && ciphertext) {
-        cover.src = steg.encode(ciphertext, original);
+        cover.src = await steg.encode(ciphertext, original);
         // cover.src = steg.encode(ciphertext.value, original);
         download.download = 'encoded_image.png';
         download.href = cover.src.replace('image/png', 'image/octet-stream');
@@ -69,10 +69,16 @@ const handleHide = () => {
             // title: 'Oops...',
             text: 'Successfully hide',
         });
+        return;
     }
+    Swal.fire({
+        icon: 'error',
+        // title: 'Oops...',
+        text: 'Cannot hide',
+    });
 };
 
-const handleShow = () => {
+const handleShow = async () => {
     if (!$('#decrypt-key').val()) {
         Swal.fire({
             icon: 'error',
@@ -94,7 +100,7 @@ const handleShow = () => {
         message = document.querySelector('#mes-decrypted');
     if (img) {
         let ciphertext = steg.decode(img);
-        let bytes = CryptoJS.AES.decrypt(ciphertext, key);
+        let bytes = await CryptoJS.AES.decrypt(ciphertext, key);
         let originalText = bytes.toString(CryptoJS.enc.Utf8);
         message.innerHTML = originalText;
     }
@@ -115,6 +121,7 @@ const handleSend = () => {
         });
         return;
     }
+    $('#img-decrypt').val('');
     $('#decrypt-key').val($('#encrypt-key').val());
     $('.preview-encrypted').attr('src', $('.preview-hidden').attr('src'));
 };
