@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>AES - Steganographys</title>
+        <link rel="stylesheet" href="./style.css" />
+    </head>
+    <body>
+        <header>AES ENCRYPTION ALGORITHM AND STEGANOGRAPHY TECHNIQUE</header>
+        <div class="content">
+            <div class="person">
+                <div class="name">Person A</div>
+
+                <label for="encrypt-key">Key</label>
+                <input type="text" id="encrypt-key" />
+
+                <label for="mes-encrypt">Message</label>
+                <textarea id="mes-encrypt" cols="30" rows="8"></textarea>
+
+                <!-- <button
+                    class="btn"
+                    id="encrypt-mes-btn"
+                    style="margin-bottom: 10px"
+                >
+                    Encrypt
+                </button>
+
+                <br />
+
+                <label for="mes-encrypted">Encrypted Message</label>
+                <textarea
+                    disabled
+                    id="mes-encrypted"
+                    cols="30"
+                    rows="8"
+                ></textarea> -->
+
+                <label for="img-encrypt">Image</label>
+                <input type="file" id="img-encrypt" accept="image/*" />
+
+                <div style="display: flex">
+                    <div style="margin-right: 20px">
+                        <label style="font-size: 12px">Original</label>
+                        <br />
+                        <img
+                            class="preview-original"
+                            style="
+                                border: 1px solid rgb(82, 82, 82);
+                                width: 140px;
+                                height: 140x;
+                                object-fit: cover;
+                                margin-bottom: 10px;
+                            "
+                            src="./images/default.png"
+                        />
+                    </div>
+                    <div>
+                        <label style="font-size: 12px">Hidden</label>
+                        <br />
+                        <a id="download" href="#">
+                            <img
+                                class="preview-hidden"
+                                style="
+                                    border: 1px solid rgb(82, 82, 82);
+                                    width: 140px;
+                                    height: 140x;
+                                    object-fit: cover;
+                                    margin-bottom: 10px;
+                                "
+                                src="./images/default.png"
+                            />
+                        </a>
+                    </div>
+                </div>
+                <button class="btn" id="hide-btn">Hide</button>
+                <button class="btn" id="send-btn">Send B</button>
+            </div>
+            <div class="method">
+                <button class="btn" id="generate-btn">Generate Key</button>
+                <button class="btn" id="clr-btn">Clear</button>
+            </div>
+            <div class="person">
+                <div class="name">Person B</div>
+                <label for="decrypt-key">Key</label>
+                <input type="text" id="decrypt-key" />
+                <label for="img-decrypt">Encrypted Image</label>
+                <input type="file" id="img-decrypt" accept="image/*" />
+                <div>
+                    <label style="font-size: 12px">Encrypted</label>
+                    <br />
+                    <img
+                        class="preview-encrypted"
+                        style="
+                            border: 1px solid rgb(82, 82, 82);
+                            width: 140px;
+                            height: 140x;
+                            object-fit: cover;
+                            margin-bottom: 10px;
+                        "
+                        src="./images/default.png"
+                    />
+                </div>
+                <button class="btn" id="show-btn" style="margin-bottom: 10px">
+                    Show
+                </button>
+                <br />
+                <label for="mes-decrypted">Decrypted Message</label>
+                <textarea
+                    readonly
+                    id="mes-decrypted"
+                    cols="30"
+                    rows="8"
+                ></textarea>
+            </div>
+        </div>
+        <script src="./js/jquery.min.js"></script>
+        <script src="./js/crypto-js.min.js"></script>
+        <script src="./js/steganography.min.js"></script>
+        <script src="./js/script.js"></script>
+    </body>
+</html>
