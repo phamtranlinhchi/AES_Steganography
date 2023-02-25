@@ -17,6 +17,7 @@ const clearAll = () => {
     $('input,textarea').val('');
     $('img').attr('src', './images/default.png');
     $('#download').attr('href', '#');
+    $('#download').attr('download', null);
 };
 
 const handleEncrypt = async () => {
