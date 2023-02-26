@@ -32,7 +32,7 @@ const handleHide = async () => {
     if (!$('#encrypt-key').val()) {
         Swal.fire({
             icon: 'error',
-            // title: 'Oops...',
+            title: "Can't Hide",
             text: 'The Key field is required!',
         });
         return;
@@ -40,12 +40,14 @@ const handleHide = async () => {
     if (!$('#mes-encrypt').val()) {
         Swal.fire({
             icon: 'error',
+            title: "Can't Hide",
             text: 'The Message field is required!',
         });
         return;
     }
     if (!$('#img-encrypt').val()) {
         Swal.fire({
+            title: "Can't Hide",
             icon: 'error',
             text: 'The Image field is required!',
         });
@@ -67,15 +69,15 @@ const handleHide = async () => {
         download.href = cover.src.replace('image/png', 'image/octet-stream');
         Swal.fire({
             icon: 'success',
-            // title: 'Oops...',
-            text: 'Successfully hide',
+            title: 'Success',
+            text: 'Successfully hide!',
         });
         return;
     }
     Swal.fire({
         icon: 'error',
-        // title: 'Oops...',
-        text: 'Cannot hide',
+        title: 'Error',
+        text: 'Cannot hide!',
     });
 };
 
@@ -83,7 +85,7 @@ const handleShow = async () => {
     if (!$('#decrypt-key').val()) {
         Swal.fire({
             icon: 'error',
-            // title: 'Oops...',
+            title: "Can't Show",
             text: 'The Key field is required!',
         });
         return;
@@ -91,7 +93,7 @@ const handleShow = async () => {
     if ($('.preview-encrypted').attr('src') === './images/default.png') {
         Swal.fire({
             icon: 'error',
-            // title: 'Oops...',
+            title: "Can't Show",
             text: 'The Encrypted Image is required!',
         });
         return;
@@ -100,24 +102,43 @@ const handleShow = async () => {
     let img = document.querySelector('.preview-encrypted'),
         message = document.querySelector('#mes-decrypted');
     if (img) {
-        let ciphertext = steg.decode(img);
-        let bytes = await CryptoJS.AES.decrypt(ciphertext, key);
-        let originalText = bytes.toString(CryptoJS.enc.Utf8);
-        message.innerHTML = originalText;
+        try {
+            let ciphertext = await steg.decode(img);
+            let bytes = await CryptoJS.AES.decrypt(ciphertext, key);
+            if (bytes) {
+                let originalText = bytes.toString(CryptoJS.enc.Utf8);
+                message.innerHTML = originalText;
+                if (originalText) {
+                    Swal.fire({
+                        title: 'Success',
+                        icon: 'success',
+                        text: 'Successfully show!',
+                    });
+                    return;
+                }
+                Swal.fire({
+                    icon: 'error',
+                    title: "Can't Show",
+                    // text: err,
+                    text: 'Please check key and encrypted image again!',
+                });
+            }
+        } catch (err) {
+            Swal.fire({
+                icon: 'error',
+                title: "Can't Show",
+                // text: err,
+                text: 'Please check key and encrypted image again!',
+            });
+        }
     }
-    if (!message.innerHTML)
-        Swal.fire({
-            icon: 'error',
-            // title: 'Oops...',
-            text: 'Cannot show!',
-        });
 };
 
 const handleSend = () => {
     if ($('.preview-hidden').attr('src') === './images/default.png') {
         Swal.fire({
             icon: 'error',
-            // title: 'Oops...',
+            title: "Can't Send",
             text: 'You need to hide infomation first!',
         });
         return;
@@ -125,6 +146,11 @@ const handleSend = () => {
     $('#img-decrypt').val('');
     $('#decrypt-key').val($('#encrypt-key').val());
     $('.preview-encrypted').attr('src', $('.preview-hidden').attr('src'));
+    Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: 'Successfully send!',
+    });
 };
 
 const handleGenerate = () => {
