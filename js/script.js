@@ -107,7 +107,7 @@ const handleShow = async () => {
             let bytes = await CryptoJS.AES.decrypt(ciphertext, key);
             if (bytes) {
                 let originalText = bytes.toString(CryptoJS.enc.Utf8);
-                message.innerHTML = originalText;
+                message.value = originalText;
                 if (originalText) {
                     Swal.fire({
                         title: 'Success',
